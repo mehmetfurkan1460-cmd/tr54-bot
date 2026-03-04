@@ -381,8 +381,32 @@ const embed = new EmbedBuilder()
 • Toksiklik Yasak
 • Saygı Zorunlu
 `);
+channel.send({ embeds:[embed], components:[row] });
 
+}
+/* UNBANALL */
+if (message.content === "!unbanall") {
 
+if (!message.member.permissions.has(PermissionsBitField.Flags.BanMembers))
+return message.reply("Yetkin yok.");
+
+try {
+
+const bans = await message.guild.bans.fetch();
+
+for (const ban of bans.values()) {
+await message.guild.members.unban(ban.user.id);
+}
+
+message.reply("✅ Tüm yasaklılar kaldırıldı.");
+
+} catch (err) {
+console.log(err);
+}
+
+}
+
+});
 
 
 client.login(TOKEN);
