@@ -192,32 +192,6 @@ await interaction.reply("Ticket kapatıldı.");
 });
 
 
-client.on("messageCreate", async message => {
-
-if(message.author.bot) return;
-
-if(message.content === "!unbanall"){
-
-if(!message.member.permissions.has("BanMembers"))
-return message.reply("Yetkin yok.");
-
-try{
-
-const bans = await message.guild.bans.fetch();
-
-bans.forEach(async ban => {
-await message.guild.members.unban(ban.user.id);
-});
-
-message.reply("✅ Tüm yasaklılar kaldırıldı.");
-
-}catch(err){
-console.log(err);
-}
-
-}
-
-});
   
 
 client.on("messageDelete", async message => {
@@ -346,9 +320,6 @@ logChannel.send({ embeds:[embed]});
 });
 
 
-client.on("messageCreate", async message => {
-
-if (message.author.bot) return;
 
 
 client.on("messageCreate", async message => {
