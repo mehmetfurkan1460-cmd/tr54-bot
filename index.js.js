@@ -350,6 +350,12 @@ client.on("messageCreate", async message => {
 
 if (message.author.bot) return;
 
+
+client.on("messageCreate", async message => {
+
+if (message.author.bot) return;
+
+
 /* KUR */
 if (message.content === "!kur") {
 
