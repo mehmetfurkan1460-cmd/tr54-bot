@@ -50,14 +50,7 @@ client.once("ready",()=>{
 console.log(`${client.user.tag} aktif`);
 });
 
-/* TEST KOMUT */
 
-client.on("messageCreate",message=>{
-if(message.author.bot) return;
-
-if(message.content==="!ping"){
-message.reply("Bot çalışıyor.");
-}
 
 /* KUR */
 
