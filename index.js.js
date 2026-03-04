@@ -52,37 +52,7 @@ console.log(`${client.user.tag} aktif`);
 
 
 
-/* KUR */
 
-if(message.content==="!kur"){
-
-if(!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
-return;
-
-const channel = message.guild.channels.cache.get(REGISTER_CHANNEL_ID);
-if(!channel) return;
-
-const row = new ActionRowBuilder().addComponents(
-new ButtonBuilder()
-.setCustomId("basvuru")
-.setLabel("Başvuru Yap")
-.setStyle(ButtonStyle.Success)
-);
-
-const embed = new EmbedBuilder()
-.setColor("Orange")
-.setTitle("TR54 Kayıt Şartları")
-.setDescription(`
-• 1300+ Saat
-• +18 Yaş
-• Toksiklik Yasak
-• Saygı Zorunlu
-`);
-
-channel.send({embeds:[embed],components:[row]});
-
-}
-});
 
 /* AUTO ROLE */
 
@@ -374,6 +344,38 @@ const embed = new (require("discord.js").EmbedBuilder)()
 logChannel.send({ embeds:[embed]});
 
 });
+
+
+client.on("messageCreate", async message => {
+
+if (message.author.bot) return;
+
+/* KUR */
+if (message.content === "!kur") {
+
+if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
+return;
+
+const channel = message.guild.channels.cache.get(REGISTER_CHANNEL_ID);
+if (!channel) return;
+
+const row = new ActionRowBuilder().addComponents(
+new ButtonBuilder()
+.setCustomId("basvuru")
+.setLabel("Başvuru Yap")
+.setStyle(ButtonStyle.Success)
+);
+
+const embed = new EmbedBuilder()
+.setColor("Orange")
+.setTitle("TR54 Kayıt Şartları")
+.setDescription(`
+• 1300+ Saat
+• +18 Yaş
+• Toksiklik Yasak
+• Saygı Zorunlu
+`);
+
 
 
 
