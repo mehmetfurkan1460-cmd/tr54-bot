@@ -64,7 +64,6 @@ if(role) member.roles.add(role).catch(()=>{});
 
 /* GELİŞMİŞ GİRİŞ SİSTEMİ */
 
-const JOIN_CHANNEL_ID = "KANAL_ID_BURAYA";
 
 client.on("guildMemberAdd", async member => {
 
