@@ -23,16 +23,17 @@ TextInputBuilder,
 TextInputStyle
 } = require("discord.js");
 
-const TOKEN = process.env.TOKEN;
+const TOKEN = process.env.TOKEN; 
 
+const JOIN_CHANNEL_ID = "1478397454817951966";
 const AUTO_ROLE_ID = "1478125999626649761";
-const WELCOME_CHANNEL_ID = "1478397454817951966";
 const REGISTER_CHANNEL_ID = "1478126023554891950";
 const TICKET_CATEGORY_ID = "1478408800871645364";
 const CLOSED_CATEGORY_ID = "1478409183236980939";
 const MESSAGE_LOG_CHANNEL_ID = "1478400764299710516";
 const KICK_LOG_CHANNEL_ID = "1478401069775192190";
 const CHANNEL_LOG_CHANNEL_ID = "1478126024788021309";
+const LEAVE_CHANNEL_ID = "1478397454817951966";
 
 
 const client = new Client({
@@ -52,8 +53,6 @@ console.log(`${client.user.tag} aktif`);
 
 
 
-
-
 /* AUTO ROLE */
 
 client.on("guildMemberAdd",async member=>{
@@ -61,24 +60,79 @@ const role = member.guild.roles.cache.get(AUTO_ROLE_ID);
 if(role) member.roles.add(role).catch(()=>{});
 });
 
-/* WELCOME */
 
-client.on("guildMemberAdd",async member=>{
 
-const channel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
+/* GELİŞMİŞ GİRİŞ SİSTEMİ */
+
+const JOIN_CHANNEL_ID = "KANAL_ID_BURAYA";
+
+client.on("guildMemberAdd", async member => {
+
+const channel = member.guild.channels.cache.get(JOIN_CHANNEL_ID);
 if(!channel) return;
 
+const created = member.user.createdAt;
+
 const embed = new EmbedBuilder()
-.setColor("Orange")
-.setTitle("TR54 Ailesine Katılım")
-.setDescription(`HOŞ GELDİN ${member.user.username}`)
+.setColor(0x00ff00)
+.setTitle("TR54 Ailesine Hoş Geldin")
 .setThumbnail(member.user.displayAvatarURL({dynamic:true}))
+.setDescription(`${member} sunucuya katıldı.`)
+.addFields(
+{ name:"Kullanıcı", value:`${member.user.tag}`, inline:true },
+{ name:"ID", value:`${member.user.id}`, inline:true },
+{ name:"Hesap Oluşturma", value:`<t:${Math.floor(created.getTime()/1000)}:F>` },
+{ name:"Üye Sayısı", value:`${member.guild.memberCount}`, inline:true }
+)
 .setFooter({text:"TR54 Yönetim Ekibi"})
 .setTimestamp();
 
 channel.send({embeds:[embed]});
 
 });
+
+
+
+/* GELİŞMİŞ ÇIKIŞ SİSTEMİ */
+
+client.on("guildMemberRemove", async member => {
+
+const channel = member.guild.channels.cache.get(LEAVE_CHANNEL_ID);
+if(!channel) return;
+
+const joinDate = member.joinedAt;
+const leaveDate = new Date();
+
+let days = 0;
+
+if(joinDate){
+days = Math.floor((leaveDate - joinDate) / (1000 * 60 * 60 * 24));
+}
+
+const embed = new EmbedBuilder()
+.setColor(0xff0000)
+.setTitle("Sunucudan Ayrılan Üye")
+.setThumbnail(member.user.displayAvatarURL({dynamic:true}))
+.addFields(
+{ name:"Kullanıcı", value:`${member.user.tag}`, inline:true },
+{ name:"ID", value:`${member.user.id}`, inline:true },
+{ name:"Sunucuya Giriş", value: joinDate ? `<t:${Math.floor(joinDate.getTime()/1000)}:F>` : "Bilinmiyor" },
+{ name:"Sunucuda Kalma Süresi", value:`${days} gün`, inline:true },
+{ name:"Sunucudan Ayrılma", value:`<t:${Math.floor(leaveDate.getTime()/1000)}:F>` },
+{ name:"Güncel Üye Sayısı", value:`${member.guild.memberCount}`, inline:true }
+)
+.setFooter({text:"TR54 Yönetim Ekibi"})
+.setTimestamp();
+
+channel.send({embeds:[embed]});
+
+});
+
+
+
+
+
+
 
 /* INTERACTION */
 
@@ -379,5 +433,12 @@ console.log(err);
 
 });
 
+process.on("uncaughtException", err => {
+console.log("Hata:", err);
+});
+
+process.on("unhandledRejection", err => {
+console.log("Promise hata:", err);
+});
 
 client.login(TOKEN);
